@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.productmanagement.dao.ProductMapper">
+  <resultMap id="BaseResultMap" type="com.demo.productmanagement.model.Product">
+    <!--@mbg.generated -->
+    <!--@Table product -->
+    <!-- generated on Mon Aug 29 08:55:05 GMT+07:00 2022 -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="delete_yn" jdbcType="TINYINT" property="deleteYn" />
+    <result column="created_dtm" jdbcType="TIMESTAMP" property="createdDtm" />
+    <result column="created_id" jdbcType="BIGINT" property="createdId" />
+    <result column="updated_dtm" jdbcType="TIMESTAMP" property="updatedDtm" />
+    <result column="updated_id" jdbcType="BIGINT" property="updatedId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated -->
+    delete from product
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert"  keyColumn="id" keyProperty="id" parameterType="com.demo.productmanagement.model.Product" useGeneratedKeys="true"  >
+    <!--@mbg.generated -->
+    insert into product (`name`, price, `desc`, 
+      delete_yn, created_dtm, created_id, 
+      updated_dtm, updated_id)
+    values (#{name,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, #{desc,jdbcType=VARCHAR}, 
+      #{deleteYn,jdbcType=TINYINT}, #{createdDtm,jdbcType=TIMESTAMP}, #{createdId,jdbcType=BIGINT}, 
+      #{updatedDtm,jdbcType=TIMESTAMP}, #{updatedId,jdbcType=BIGINT});
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.demo.productmanagement.model.Product">
+    <!--@mbg.generated -->
+    update product
+    set `name` = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      `desc` = #{desc,jdbcType=VARCHAR},
+      delete_yn = #{deleteYn,jdbcType=TINYINT},
+      created_dtm = #{createdDtm,jdbcType=TIMESTAMP},
+      created_id = #{createdId,jdbcType=BIGINT},
+      updated_dtm = #{updatedDtm,jdbcType=TIMESTAMP},
+      updated_id = #{updatedId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="search"  resultMap="ProductResultMap">
+    <!--@mbg.generated -->
+      select * from (  select a.id, a.`name`, a.price, a.`desc`, a.delete_yn, a.created_dtm, a.created_id, a.updated_dtm,
+      a.updated_id, i.id as img_id, i.url as img_url, pc.category_id as ctg_id, pc.name as ctg_name , DENSE_RANK() OVER (ORDER BY a.id) rnum
+      from product a left join image i on a.id = i.product_id
+      left join (select z.category_id, z.product_id, w.name from product_category z inner join category w on z.category_id = w.id )pc on a.id = pc.product_id
+      WHERE a.`name` like '%'  #{nameSearch,jdbcType=NVARCHAR}  '%'
+      ) as tbl1
+      where tbl1.rnum > #{current_page,jdbcType=INTEGER} and #{page_size,jdbcType=INTEGER} >= tbl1.rnum
+  </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ProductResultMap">
+        <!--@mbg.generated -->
+        select a.id, a.`name`, a.price, a.`desc`, a.delete_yn, a.created_dtm, a.created_id, a.updated_dtm,
+        a.updated_id, i.id as img_id, i.url as img_url, pc.category_id as ctg_id, pc.name as ctg_name
+        from product a left join image i on a.id = i.product_id
+        left join (select z.category_id, z.product_id, w.name from product_category z inner join category w on z.category_id = w.id )pc on a.id = pc.product_id
+        where a.id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+  <select id="selectAll" resultMap="ProductResultMap">
+    <!--@mbg.generated -->
+   select * from ( select a.id, a.`name`, a.price, a.`desc`, a.delete_yn, a.created_dtm, a.created_id, a.updated_dtm,
+    a.updated_id, i.id as img_id, i.url as img_url, pc.category_id as ctg_id, pc.name as ctg_name, u.id as createdID, u.name as creatorName, u.email as creatorEmail,
+      u1.id as modifierID, u1.name as modifierName, u1.email as modifierEmail <!--, ROW_NUMBER() OVER (ORDER BY id) rnum-->
+    , DENSE_RANK() OVER (ORDER BY a.id) rnum
+    from product a left join image i on a.id = i.product_id
+               left join (select z.category_id, z.product_id, w.name from product_category z inner join category w on z.category_id = w.id )pc on a.id = pc.product_id
+                left join user u on u.id = a.created_id
+                left join user u1 on u.id = a.updated_id
+                where 1=1
+		    <if test="input.name != null and input.name != ''">
+		    	<bind name="name" value="'%' + input.name + '%'" />
+			    	AND a.name like #{name}
+		  	</if>
+      ) as tbl1
+    where tbl1.rnum > #{current_page,jdbcType=INTEGER} and #{page_size,jdbcType=INTEGER} >= tbl1.rnum
+  </select>
+
+  <resultMap id="ProductResultMap" type="com.demo.productmanagement.model.Product">
+          <id property="id" column="id"/>
+          <result property="name" column="name" />
+          <result property="price" column="price" />
+          <result property="desc" column="desc" />
+          <result property="deleteYn" column="delete_yn" />
+          <result property="createdDtm" column="created_dtm" />
+          <result property="createdId" column="created_id" />
+          <result property="updatedDtm" column="updated_dtm" />
+          <result property="updatedId" column="updated_id" />
+<!--          <association property="createdId" column="created_id" columnPrefix="us_"/>-->
+<!--          <association property="updatedId" column="updated_id" columnPrefix="us1_"/>-->
+          <collection  property="listImg"  javaType="ArrayList" ofType="Image" resultMap="productImgList" columnPrefix="img_" />
+          <collection  property="listCategory"  javaType="ArrayList" ofType="Category" resultMap="productCtgList" columnPrefix="ctg_"  />
+
+  </resultMap>
+
+  <resultMap id="productImgList"  type="com.demo.productmanagement.model.Image" >
+    <result property="id"  column="id"/>
+    <result property="url" column="url"/>
+  </resultMap>
+  <resultMap id="productCtgList" type="com.demo.productmanagement.model.Category">
+    <result property="id"  column="id"/>
+    <result property="name" column="name"/>
+  </resultMap>
+    <select id="latestCreatedProduct" resultMap="ProductResultMap" >
+        select * from product where id = (select max(id) as newestProduct from product )
+    </select>
+    
+   <select id="countAll" parameterType="com.demo.productmanagement.dto.ProductUserDTO" resultType="int">
+	   select count(id) as total
+	   from product
+	   where 1=1
+	   <if test="input.name != null and input.name != ''">
+	    	<bind name="name" value="'%' + input.name + '%'" />
+		    	AND name like #{name}
+	   </if>
+  </select>
+</mapper>

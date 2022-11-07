@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.productmanagement.dao.CategoryMapper">
+  <resultMap id="BaseResultMap" type="com.demo.productmanagement.model.Category">
+    <!--@mbg.generated -->
+    <!--@Table category -->
+    <!-- generated on Tue Aug 30 10:47:31 GMT+07:00 2022 -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="created_dtm" jdbcType="TIMESTAMP" property="createdDtm" />
+    <result column="created_id" jdbcType="BIGINT" property="createdId" />
+    <result column="updated_dtm" jdbcType="TIMESTAMP" property="updatedDtm" />
+    <result column="updated_id" jdbcType="BIGINT" property="updatedId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated -->
+    delete from category
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.demo.productmanagement.model.Category" useGeneratedKeys="true">
+    <!--@mbg.generated -->
+    insert into category (`name`,
+      created_dtm, created_id, updated_dtm, 
+      updated_id)
+    values (#{name,jdbcType=VARCHAR},
+      #{createdDtm,jdbcType=TIMESTAMP}, #{createdId,jdbcType=BIGINT}, #{updatedDtm,jdbcType=TIMESTAMP}, 
+      #{updatedId,jdbcType=BIGINT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.demo.productmanagement.model.Category">
+    <!--@mbg.generated -->
+    update category
+    set `name` = #{name,jdbcType=VARCHAR},
+      created_dtm = #{createdDtm,jdbcType=TIMESTAMP},
+      created_id = #{createdId,jdbcType=BIGINT},
+      updated_dtm = #{updatedDtm,jdbcType=TIMESTAMP},
+      updated_id = #{updatedId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated -->
+    select id, `desc`, created_dtm, created_id, updated_dtm, updated_id
+    from category
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    <!--@mbg.generated -->
+    select id, `name`, created_dtm, created_id, updated_dtm, updated_id
+    from category
+  </select>
+
+  <select id="selectByBlogId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <!--@mbg.generated -->
+    SELECT cate.name,cate.id from product_category as pc
+    INNER JOIN category as cate on cate.id = pc.category_id
+    WHERE pc.blog_id = #{blogId,jdbcType=VARCHAR}
+  </select>
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <typeAlias alias="Product" type="com.demo.productmanagement.model.Product"/>
+        <typeAlias alias="ProductCategory" type="com.demo.productmanagement.model.ProductCategory"/>
+        <typeAlias alias="Category" type="com.demo.productmanagement.model.Category"/>
+        <typeAlias alias="Image" type="com.demo.productmanagement.model.Image"/>
+    </typeAliases>
+    <mappers>
+        <mapper resource="mapper/ProductMapper.xml" />
+        <mapper resource="mapper/ProductCategoryMapper.xml" />
+        <mapper resource="mapper/CategoryMapper.xml" />
+        <mapper resource="mapper/ImageMapper.xml" />
+    </mappers>
+</configuration>

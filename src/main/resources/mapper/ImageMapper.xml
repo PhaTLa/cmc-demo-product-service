@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.productmanagement.dao.ImageMapper">
+  <resultMap id="BaseResultMap" type="com.demo.productmanagement.model.Image">
+    <!--@mbg.generated -->
+    <!--@Table image -->
+    <!-- generated on Mon Aug 29 08:54:41 GMT+07:00 2022 -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="product_id" jdbcType="BIGINT" property="productId" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="created_dtm" jdbcType="TIMESTAMP" property="createdDtm" />
+    <result column="created_id" jdbcType="BIGINT" property="createdId" />
+    <result column="updated_dtm" jdbcType="TIMESTAMP" property="updatedDtm" />
+    <result column="updated_id" jdbcType="BIGINT" property="updatedId" />
+    <result column="blog_id" jdbcType="VARCHAR" property="blogId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated -->
+    delete from image
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.demo.productmanagement.model.Image" useGeneratedKeys="true">
+    <!--@mbg.generated -->
+<!--    insert into image (product_id, url, `desc`, -->
+<!--      created_dtm, created_id, updated_dtm, -->
+<!--      updated_id)-->
+<!--    values (#{productId,jdbcType=BIGINT}, #{url,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, -->
+<!--      #{createdDtm,jdbcType=TIMESTAMP}, #{createdId,jdbcType=BIGINT}, #{updatedDtm,jdbcType=TIMESTAMP}, -->
+<!--      #{updatedId,jdbcType=BIGINT})-->
+
+    insert into image (product_id, url, blog_id)
+    values (#{productId,jdbcType=BIGINT}, #{url,jdbcType=VARCHAR}, #{blogId,jdbcType=VARCHAR})
+
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.demo.productmanagement.model.Image">
+    <!--@mbg.generated -->
+    update image
+    set product_id = #{productId,jdbcType=BIGINT},
+      url = #{url,jdbcType=VARCHAR},
+      `desc` = #{desc,jdbcType=VARCHAR},
+      created_dtm = #{createdDtm,jdbcType=TIMESTAMP},
+      created_id = #{createdId,jdbcType=BIGINT},
+      updated_dtm = #{updatedDtm,jdbcType=TIMESTAMP},
+      updated_id = #{updatedId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated -->
+    select id, product_id, url, `desc`, created_dtm, created_id, updated_dtm, updated_id
+    from image
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    <!--@mbg.generated -->
+    select id, product_id, url, `desc`, created_dtm, created_id, updated_dtm, updated_id
+    from image
+  </select>
+
+  <select id="selectAllByProductID" resultMap="BaseResultMap">
+    <!--@mbg.generated -->
+    select id, product_id, url, `desc`, created_dtm, created_id, updated_dtm, updated_id
+    from image
+   where
+      product_id= #{productID,jdbcType=BIGINT}
+
+  </select>
+
+  <select id="selectByBlogId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <!--@mbg.generated -->
+    select id, product_id, url, `desc`, created_dtm, created_id, updated_dtm, updated_id, blog_id
+    from image
+    where
+    blog_id like #{blogId,jdbcType=VARCHAR}
+
+  </select>
+
+</mapper>
