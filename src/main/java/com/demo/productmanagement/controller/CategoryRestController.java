@@ -14,7 +14,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api")
-@CrossOrigin("*")
 public class CategoryRestController {
 
 //    CategoryMap categoryMap = new CategoryMap();

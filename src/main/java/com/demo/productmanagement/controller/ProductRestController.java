@@ -28,7 +28,6 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping(value = "/api")
-@CrossOrigin("*")
 public class ProductRestController {
 
     UploadFileUtils uploadFileUtils = new UploadFileUtils();
