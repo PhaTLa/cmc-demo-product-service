@@ -24,12 +24,12 @@ jobs:
       run: mvn --batch-mode --update-snapshots package -Dmaven.test.skip -f pom.xml
       
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag lampt1210/first-repo:cmcdemo-gateway-service
+      run: docker build . --file Dockerfile --tag lampt1210/first-repo:cmcdemo-product-service
 
     - name: Push image to docker repository
       run: |
         docker login -u lampt1210 -p 12102022a@
         docker images
-        docker push lampt1210/first-repo:cmcdemo-gateway-service
+        docker push lampt1210/first-repo:cmcdemo-product-service
     
       
