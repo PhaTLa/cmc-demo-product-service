@@ -1,11 +1,14 @@
 package com.demo.productmanagement.controller;
 
+import com.demo.productmanagement.common.AppConstants;
 import com.demo.productmanagement.common.ResponseVo;
 import com.demo.productmanagement.dto.ProductAddRequestDTO;
 import com.demo.productmanagement.dto.ProductAdminDTO;
 import com.demo.productmanagement.dto.ProductUserDTO;
 import com.demo.productmanagement.feign.CommonFeignService;
+import com.demo.productmanagement.feign.UserFeignService;
 import com.demo.productmanagement.feign.dto.UploadFileResponse;
+import com.demo.productmanagement.feign.dto.UserIdAndNameRespDto;
 import com.demo.productmanagement.model.Image;
 import com.demo.productmanagement.model.Product;
 import com.demo.productmanagement.service.ImageService;
@@ -17,12 +20,16 @@ import com.demo.productmanagement.util.UploadFileUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -30,8 +37,8 @@ import java.util.List;
 @RequestMapping(value = "/api")
 public class ProductRestController {
 
-    UploadFileUtils uploadFileUtils = new UploadFileUtils();
-    //    ProductAdminMap adminMap = new ProductAdminMap();
+    @Value("${user-service.api-key}")
+    String apiKey;
     @Autowired
     ProductAdminMap adminMap;
     @Autowired
@@ -41,8 +48,9 @@ public class ProductRestController {
     @Autowired
     ProductService productService;
 
-    //    @Autowired
-//    private FileStorageService fileStorageService;
+    @Autowired
+    UserFeignService userFeignService;
+
     @Autowired
     CommonFeignService commonFeignService;
 
@@ -94,10 +102,27 @@ public class ProductRestController {
     @PostMapping(value = "/admin/addProduct")
     public ResponseEntity<String> addProduct(
             @RequestParam(value = "files", required = false) MultipartFile[] multipartFile,
-            String jsonFile) {
+            String jsonFile, HttpServletRequest request) {
         List<String> listAddedImg = new ArrayList<>();
         try {
+            String usernameRq = request.getHeader("username");
+            if(!StringUtils.hasLength(usernameRq)){
+                return new ResponseEntity<>("Something bị ốm!", HttpStatus.BAD_REQUEST);
+            }
+
+            String headerApiKey = AppConstants.API_KEY_PLACEHOLDER+" "+apiKey;
+            UserIdAndNameRespDto userReq = userFeignService.getIdByUserName(usernameRq,headerApiKey);
+
             ProductAddRequestDTO productDTO = new ObjectMapper().readValue(jsonFile, ProductAddRequestDTO.class);
+
+            Product newProduct = new Product(productDTO.getDisplayName(), productDTO.getPrice(), productDTO.getDescription());
+
+            if(userReq!=null && userReq.getId()!=null){
+                newProduct.setCreatedId(userReq.getId());
+            }
+
+            newProduct.setDeleteYn(Short.valueOf("0"));
+            newProduct.setCreatedDtm(new Date());
 
             int id = productService.insert(new Product(productDTO.getDisplayName(), productDTO.getPrice(), productDTO.getDescription()));
             log.info("productID from mybatis builtIn: {}", id);
