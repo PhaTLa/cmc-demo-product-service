@@ -9,6 +9,7 @@ import com.demo.productmanagement.feign.CommonFeignService;
 import com.demo.productmanagement.feign.UserFeignService;
 import com.demo.productmanagement.feign.dto.UploadFileResponse;
 import com.demo.productmanagement.feign.dto.UserIdAndNameRespDto;
+import com.demo.productmanagement.feign.dto.UsernameRequest;
 import com.demo.productmanagement.model.Image;
 import com.demo.productmanagement.model.Product;
 import com.demo.productmanagement.service.ImageService;
@@ -120,7 +121,10 @@ public class ProductRestController {
             }
 
             String headerApiKey = AppConstants.API_KEY_PLACEHOLDER+" "+apiKey;
-            UserIdAndNameRespDto userReq = userFeignService.getIdByUserName(usernameRq,headerApiKey);
+
+            UsernameRequest username = new UsernameRequest(usernameRq);
+
+            UserIdAndNameRespDto userReq = userFeignService.getIdByUserName(username,headerApiKey);
 
             ProductAddRequestDTO productDTO = new ObjectMapper().readValue(jsonFile, ProductAddRequestDTO.class);
 

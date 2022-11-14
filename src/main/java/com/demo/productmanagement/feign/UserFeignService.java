@@ -1,6 +1,7 @@
 package com.demo.productmanagement.feign;
 
 import com.demo.productmanagement.feign.dto.UserIdAndNameRespDto;
+import com.demo.productmanagement.feign.dto.UsernameRequest;
 import com.demo.productmanagement.model.User;
 import feign.Headers;
 import feign.Param;
@@ -19,5 +20,5 @@ public interface UserFeignService {
     User getUserByPrimaryKey(@PathVariable("id") Long id, @RequestHeader("api_key") String apiKey);
 
     @GetMapping("/get-id/{username}")
-    UserIdAndNameRespDto getIdByUserName(@PathVariable("username") String username, @RequestHeader("api_key") String apiKey);
+    UserIdAndNameRespDto getIdByUserName(@PathVariable("username") UsernameRequest username, @RequestHeader("api_key") String apiKey);
 }
