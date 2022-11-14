@@ -14,6 +14,6 @@ public interface UserFeignService {
     @GetMapping("/api/get-user/{id}")
     User getUserByPrimaryKey(@PathVariable("id") Long id, @RequestHeader("api_key") String apiKey);
 
-    @GetMapping("/get-id/{username}")
+    @GetMapping("/api/get-id/{username}")
     UserIdAndNameRespDto getIdByUserName(@PathVariable("username") String username, @RequestHeader("api_key") String apiKey);
 }
