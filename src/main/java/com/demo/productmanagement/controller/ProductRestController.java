@@ -133,7 +133,7 @@ public class ProductRestController {
             newProduct.setDeleteYn(Short.valueOf("0"));
             newProduct.setCreatedDtm(new Date());
 
-            int id = productService.insert(new Product(productDTO.getDisplayName(), productDTO.getPrice(), productDTO.getDescription()));
+            int id = productService.insert(newProduct);
             log.info("productID from mybatis builtIn: {}", id);
             Product newestProduct = productService.latestCreatedProduct();
             log.info("productID from constructor- latestCreatedProduct Function: {}", newestProduct.getId());
