@@ -9,7 +9,6 @@ import com.demo.productmanagement.feign.CommonFeignService;
 import com.demo.productmanagement.feign.UserFeignService;
 import com.demo.productmanagement.feign.dto.UploadFileResponse;
 import com.demo.productmanagement.feign.dto.UserIdAndNameRespDto;
-import com.demo.productmanagement.feign.dto.UsernameRequest;
 import com.demo.productmanagement.model.Image;
 import com.demo.productmanagement.model.Product;
 import com.demo.productmanagement.service.ImageService;
@@ -17,7 +16,6 @@ import com.demo.productmanagement.service.ProductCategoryService;
 import com.demo.productmanagement.service.ProductService;
 import com.demo.productmanagement.util.ProductAdminMap;
 import com.demo.productmanagement.util.ProductMap;
-import com.demo.productmanagement.util.UploadFileUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,9 +120,7 @@ public class ProductRestController {
 
             String headerApiKey = AppConstants.API_KEY_PLACEHOLDER+" "+apiKey;
 
-            UsernameRequest username = new UsernameRequest(usernameRq);
-
-            UserIdAndNameRespDto userReq = userFeignService.getIdByUserName(username,headerApiKey);
+            UserIdAndNameRespDto userReq = userFeignService.getIdByUserName(usernameRq,headerApiKey);
 
             ProductAddRequestDTO productDTO = new ObjectMapper().readValue(jsonFile, ProductAddRequestDTO.class);
 
