@@ -72,7 +72,13 @@ public class ProductRestController {
 
     @GetMapping(value = "/admin/products")
     public ResponseEntity<ResponseVo> getAllProductsAdmin(@RequestParam(value = "page") int currentPage,
-                                                          @RequestParam(value = "size") int pageSize, ProductUserDTO input) {
+                                                          @RequestParam(value = "size") int pageSize, ProductUserDTO input
+                                                            , HttpServletRequest request) {
+
+        String usernameRq = request.getHeader("username");
+
+        log.info("===========> get username from header: {}", usernameRq);
+
         List<Product> listProduct = new ArrayList<>();
         ResponseVo response = new ResponseVo("OK");
         List<ProductAdminDTO> listDTO = new ArrayList<>();
@@ -106,6 +112,9 @@ public class ProductRestController {
         List<String> listAddedImg = new ArrayList<>();
         try {
             String usernameRq = request.getHeader("username");
+
+            log.info("===========> get username from header: {}", usernameRq);
+
             if(!StringUtils.hasLength(usernameRq)){
                 return new ResponseEntity<>("Something bị ốm!", HttpStatus.BAD_REQUEST);
             }
